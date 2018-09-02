@@ -49,16 +49,10 @@
 						</div>
 					</div>
 				</div>
-
-				<!-- <div class="hoverBox next" v-on:click="goToPage('next', position)" v-on:mouseenter="changePeakStatus($event, 'next')" v-on:mouseleave="changePeakStatus($event, 'next')"></div> -->
-				<!-- <div class="hoverBox previous" v-on:click="goToPage('previous', position)" v-on:mouseenter="changePeakStatus($event, 'previous')" v-on:mouseleave="changePeakStatus($event, 'previous')"></div> -->
 			</div>
 		</div>
 
 		<div class="fold" :class="{show: pageProperties.fold}"></div>
-		<!-- <div class="credits left" :class="{show: pageProperties.creditsLeft.length > 0}" v-html="pageProperties.creditsLeft"></div> -->
-		<!-- <div class="credits right" :class="{show: pageProperties.creditsRight.length > 0}" v-html="pageProperties.creditsRight"></div> -->
-		<!-- <div class="turnScreen"></div> -->
 		<div class="scrollDown" v-if="iDidntDoIt">hey, why don't you try scrolling?</div>
 		<div class="logoClickBox" v-if="currentPage == 0" v-on:click="goToPage('2-3')"></div>
 	</div>
@@ -77,7 +71,6 @@
 				positions: ["left", "right"],
 				idToPageMap: {left: [], right: []},
 				overviewArticles: {left: [], right: []},
-				// deviceWidth: window.visualViewport.width || window.innerWidth, // werkt niet op iOS
 				currentPage: 0,
 				totalPages: null,
 				peakStatus: {next: false, previous: false},
@@ -97,7 +90,6 @@
 					isFullscreen:false,
 				},
 				videoDirection: {left: "backward", right: "backward"},
-				// lockOrientationUniversal: window.screen.lockOrientation || window.screen.mozLockOrientation || window.screen.msLockOrientation
 			}
 		},
 		methods: {
@@ -153,7 +145,6 @@
 				//check if fold id needed
 				this.pageProperties.fold = this.articles['left'][this.currentPage].fold || this.articles['right'][this.currentPage].fold || false
 
-				// console.log(lockOrientationUniversal)
 			},
 			idToPageMapping()
 			{
@@ -180,11 +171,6 @@
 							page:this.idToPageMap[response.body[i]['id']]
 						}
 
-
-						// "<div v-on='overviewClick' class='overviewImage'><img src='https://api.o-o-h.be/uploads/"+response.body[i]['background_image']+"'></div>"
-
-						// console.log(i)
-
 						if (i < 2 || (i > 3 && i < 6)) // makes left left right right left left right right
 						{
 							this.overviewArticles.left.push(tempArticleSnippet)
@@ -203,7 +189,6 @@
 			},
 			scrollBuffer(event)
 			{
-				console.log(event.deltaY)
 				if ( (this.scrollBufferPrevDelta < 0 && event.deltaY > 0) || (this.scrollBufferPrevDelta > 0 && event.deltaY < 0) )
 				{
 					this.scrollBufferVal = 0
@@ -212,26 +197,21 @@
 				if (this.scrollToTheNextPagePlease && Math.abs(event.deltaY) > 75 )
 				{
 					this.scrollBufferVal += event.deltaY
-					// console.log(event.deltaY, event.wheelDeltaY, this.scrollBufferVal)
 				}
 
 				if (this.scrollToTheNextPagePlease && ( this.device.isFirefox && event.deltaY % 3 == 0  ) )
 				{
 					this.scrollBufferVal += 75
-					// console.log(event.deltaY, event.wheelDeltaY, this.scrollBufferVal)
 				}
 
 				if (Math.abs(this.scrollBufferVal) > this.scrollBufferThreshold)
 				{
-					console.log('===========scroll 1 page=============')
 					this.scrollBufferVal = 0
 					this.scrollPage(event)
 				}
 			},
 			scrollPage(event)
 			{
-				console.log(event.deltaY, event.wheelDeltaY, this.scrollToTheNextPagePlease)
-
 				if (this.scrollToTheNextPagePlease)
 				{
 					//initiate the scroll
@@ -264,7 +244,6 @@
 			goToPage(page, position)
 			{
 				var position = position || false;
-				console.log(page, position);
 				if (position != false)
 				{
 					if ( (page == "previous" && position == "right") || (page == "previous" && position == "left") )
@@ -340,38 +319,14 @@
 				//disable long animation
 				this.iDidntDoIt = false
 
-				// console.log(event)
 				if (event.type == "tap")
 				{
-					// console.log(screenfull.enabled, event.tapCount, this.device.isMobile)
 					if (screenfull.enabled && event.tapCount > 1 && this.device.isMobile)
 					{
 						screenfull.toggle()
 						this.device.isFullscreen = this.device.isFullscreen?false:true
 					}
 				}
-
-				// if (event.type == "pinch")
-				// {
-				// 	// console.log(screenfull.enabled, screenfull.isFullscreen, event.additionalEvent, this.device.isMobile)
-
-				// 	if (screenfull.enabled && !screenfull.isFullscreen && event.additionalEvent == "pinchout" && this.device.isMobile)
-				// 	{
-				// 		screenfull.toggle()
-				// 		this.device.isFullscreen = true
-				// 	}
-
-				// 	if (screenfull.enabled && screenfull.isFullscreen && event.additionalEvent == "pinchin" && this.device.isMobile)
-				// 	{
-				// 		screenfull.toggle()
-				// 		this.device.isFullscreen = false
-				// 	}
-				// }
-
-				// console.log(screenfull.isFullscreen)
-
-				// this.device.isFullscreen = screenfull.isFullscreen
-
 			},
 			checkDevice()
 			{
@@ -389,16 +344,11 @@
 				{
 					this.device.isFirefox = true
 				}
-
-				console.log(this.device)
 			},
 			playVideo(event, position){
-				// console.log(event)
-
 				var event = event || "";
 				var parentEl = event.target.closest(".videoContainer");
 
-				// console.log(event.target.querySelector("video"))
 				if (event.type == "mouseenter")
 				{
 					if (parentEl.querySelector("video.backward").currentTime == 0)
@@ -407,27 +357,18 @@
 					}
 
 					parentEl.querySelector("video.forward").currentTime = parentEl.querySelector("video.backward").duration - parentEl.querySelector("video.backward").currentTime
-					// parentEl.querySelector("video.backward").pause()
-
 
 					setTimeout(() => parentEl.querySelector("video.forward").play() , 100)
 					setTimeout(() => this.videoDirection[position] = "forward" , 100)
-
-
 				}
 				else
 				{
 					parentEl.querySelector("video.backward").currentTime = parentEl.querySelector("video.forward").duration - parentEl.querySelector("video.forward").currentTime
-					// parentEl.querySelector("video.forward").pause()
-
 
 					setTimeout(() => parentEl.querySelector("video.backward").play() , 100)
 					setTimeout(() => this.videoDirection[position] = "backward" , 100)
 
 				}
-
-				// console.log(this.videoDirection)
-				// console.log(event.target.querySelector("video").classList)
 			}
 		},
 		created: function () {

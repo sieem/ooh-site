@@ -8,8 +8,6 @@ Vue.config.productionTip = false
 
 require('@/assets/css/style.less')
 
-
-
 new Vue({
   router,
   el: '#app',
